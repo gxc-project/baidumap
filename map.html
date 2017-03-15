@@ -51,21 +51,28 @@
                 pt2 = new BMap.Point(pts[pts.length - 1].lng,pts[pts.length - 1].lat);
                 document.getElementsByClassName('anchorBL')[0].style.display = 'none';
 
-                var myCompOverlay1 = new ComplexCustomOverlay(pt1, '','');
-                var myCompOverlay2 = new ComplexCustomOverlay(pt2, '','');
-                var myCompOverlay3 = new ComplexCustomOverlay(p3, '','');
+                var myCompOverlay1 = new ComplexCustomOverlay(pt1, 31,40);
+                var myCompOverlay4 = new ComplexCustomOverlay(pt1, 60,40,'大屯路东');
+                var myCompOverlay5 = new ComplexCustomOverlay(pt2, 60,40,'大屯路东');
+                var myCompOverlay2 = new ComplexCustomOverlay(pt2, 31,40);
+                var myCompOverlay3 = new ComplexCustomOverlay(p3, 31,40);
 
                 map.addOverlay(myCompOverlay1);
                 map.addOverlay(myCompOverlay2);
                 map.addOverlay(myCompOverlay3);
+                map.addOverlay(myCompOverlay4);
+                map.addOverlay(myCompOverlay5);
             }
         }
     },renderOptions:{autoViewport:true}});
     driving.search(p1, p2,{waypoints:[p3]});//waypoints表示途经点
 
 
-    function ComplexCustomOverlay(point, text, mouseoverText){
+    function ComplexCustomOverlay(point,width,height, text){
         this._point = point;
+        this._width = width;
+        this._height = height;
+        this._text = text;
     }
     ComplexCustomOverlay.prototype = new BMap.Overlay();
     ComplexCustomOverlay.prototype.initialize = function(map){
@@ -75,9 +82,37 @@
         div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
         div.style.background = "url(images/1.png) no-repeat";
         div.style.backgroundSize = '100% 100%';
-        div.style.height = "40px";
-        div.style.width = "31px";
+        div.style.height = this._height +  "px";
+        div.style.width = this._width +  "px";
 
+        if(this._text != '' && this._text != null && this._text != undefined){
+            div.style.lineHeight = '40px';
+            div.style.background = '#ffffff';
+            div.style.borderRadius = '4px';
+            div.style.paddingLeft = '40px';
+            div.style.fontSize = '12px';
+            div.style.color = '#000000';
+            var ospan = document.createElement('span');
+            ospan.style.position = 'absolute';
+            ospan.style.display = 'block';
+            ospan.style.top =  '6px';
+            ospan.style.left =  '7px';
+            ospan.style.width =  '28px';
+            ospan.style.height =  '28px';
+            ospan.style.background =  'url(images/2.png) no-repeat';
+            ospan.style.backgroundSize = '100% 100%';
+            var oi = document.createElement('i');
+            oi.style.position = 'absolute';
+            oi.style.display = 'block';
+            oi.style.top =  '14px';
+            oi.style.right =  '-6px';
+            oi.style.width =  '6px';
+            oi.style.height =  '13px';
+            oi.style.background =  'url(images/arrow.png) no-repeat';
+            oi.style.backgroundSize = '100% 100%';
+            div.appendChild(ospan);
+            div.appendChild(oi);
+        }
         map.getPanes().labelPane.appendChild(div);
 
         return div;
@@ -87,6 +122,10 @@
         var pixel = map.pointToOverlayPixel(this._point);
         this._div.style.left = pixel.x - 15 + "px";
         this._div.style.top  = pixel.y - 40 + "px";
+        if(this._text != '' && this._text != null && this._text != undefined){
+            this._div.style.left = pixel.x - 106 + "px";
+            this._div.style.top  = pixel.y - 20 + "px";
+        }
     };
 
 

@@ -53,7 +53,7 @@
 
                 var myCompOverlay1 = new ComplexCustomOverlay(pt1, 31,40);
                 var myCompOverlay4 = new ComplexCustomOverlay(pt1, 60,40,'大屯路东');
-                var myCompOverlay5 = new ComplexCustomOverlay(pt2, 60,40,'大屯路东');
+                var myCompOverlay5 = new ComplexCustomOverlay(pt2, 60,40,'白石桥南');
                 var myCompOverlay2 = new ComplexCustomOverlay(pt2, 31,40);
                 var myCompOverlay3 = new ComplexCustomOverlay(p3, 31,40);
 
@@ -65,7 +65,7 @@
             }
         }
     },renderOptions:{autoViewport:true}});
-    driving.search(p1, p2,{waypoints:[p3]});//waypoints表示途经点
+    driving.search(p1, p2,{waypoints:[]});//waypoints表示途经点
 
 
     function ComplexCustomOverlay(point,width,height, text){
@@ -92,6 +92,8 @@
             div.style.paddingLeft = '40px';
             div.style.fontSize = '12px';
             div.style.color = '#000000';
+            div.style.whiteSpace = 'nowrap';
+            div.style.textOverflow = 'ellipsis';
             var ospan = document.createElement('span');
             ospan.style.position = 'absolute';
             ospan.style.display = 'block';
@@ -112,6 +114,7 @@
             oi.style.backgroundSize = '100% 100%';
             div.appendChild(ospan);
             div.appendChild(oi);
+            div.appendChild(document.createTextNode(this._text));
         }
         map.getPanes().labelPane.appendChild(div);
 

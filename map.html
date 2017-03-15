@@ -6,7 +6,7 @@
     <meta name="keywords" content="map"/>
     <meta name="description" content="map"/>
     <title>baidu map</title>
-    <link rel="icon" href="images/cube_2048.png"/>
+    <link rel="icon" href="images/1.png"/>
     <style>
         *{
             margin:0;padding:0;
@@ -44,27 +44,52 @@
                 //通过驾车实例，获得一系列点的数组
                 var pts= plan.getRoute(j).getPath();
                 var polyline = new BMap.Polyline(pts,{
-                    strokeColor:'#d78bff',strokeWeight:6,strokeOpacity:0.9
+                    strokeColor:'#d78bff',strokeWeight:5,strokeOpacity:0.9
                 });
                 map.addOverlay(polyline); //绘制轨迹
                 pt1 = new BMap.Point(pts[0].lng,pts[0].lat);
                 pt2 = new BMap.Point(pts[pts.length - 1].lng,pts[pts.length - 1].lat);
-                console.log(pts);
-                var myIcon = new BMap.Icon("images/1.jpg", new BMap.Size(31,40));
-                var marker1 = new BMap.Marker(pt1,{icon:myIcon});  // 创建标注
-                var marker2 = new BMap.Marker(pt2,{icon:myIcon});  // 创建标注
-                var marker3 = new BMap.Marker(p3,{icon:myIcon});  // 创建标注
-                console.log(pt1);
-                console.log(pt2);
-                map.addOverlay(marker1);
-                map.addOverlay(marker2);
-                map.addOverlay(marker3);
+                document.getElementsByClassName('anchorBL')[0].style.display = 'none';
+
+                var myCompOverlay1 = new ComplexCustomOverlay(pt1, '','');
+                var myCompOverlay2 = new ComplexCustomOverlay(pt2, '','');
+                var myCompOverlay3 = new ComplexCustomOverlay(p3, '','');
+
+                map.addOverlay(myCompOverlay1);
+                map.addOverlay(myCompOverlay2);
+                map.addOverlay(myCompOverlay3);
             }
         }
     }});
     driving.search(p1, p2,{waypoints:[p3]});//waypoints表示途经点
 
 
-    document.getElementsByClassName('anchorBL')[0].style.display = 'none';
+    function ComplexCustomOverlay(point, text, mouseoverText){
+        this._point = point;
+    }
+    ComplexCustomOverlay.prototype = new BMap.Overlay();
+    ComplexCustomOverlay.prototype.initialize = function(map){
+        this._map = map;
+        var div = this._div = document.createElement("div");
+        div.style.position = "absolute";
+        div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+        div.style.background = "url(images/1.png) no-repeat";
+        div.style.backgroundSize = '100% 100%';
+        div.style.height = "40px";
+        div.style.width = "31px";
+
+        map.getPanes().labelPane.appendChild(div);
+
+        return div;
+    };
+    ComplexCustomOverlay.prototype.draw = function(){
+        var map = this._map;
+        var pixel = map.pointToOverlayPixel(this._point);
+        this._div.style.left = pixel.x - 15 + "px";
+        this._div.style.top  = pixel.y - 40 + "px";
+    };
+
+
+
 </script>
 </html>
